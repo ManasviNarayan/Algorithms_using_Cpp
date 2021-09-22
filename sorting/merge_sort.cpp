@@ -1,62 +1,59 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-void merge(int arr[], int beg, int mid, int end, int n)
+void merge(int arr[], int beg, int mid, int end)
 {
-    int i=beg, j=mid+1, index=0;
-    int temp[n];
+    int n1 = mid-beg+1;
+    int n2 = end-beg;
 
-    while(i<= mid && j<=end)
+    int L[n1], M[n2];
+
+    for(int i =0; i<n1; i++)
+        L[i] = arr[beg+i];
+    for(int j=0; j<n2; j++)
+        M[j] = arr[mid + 1 + j];
+
+    int i=0, j=0, k=beg;
+
+    while(i<n1 && j<n2)
     {
-        if(arr[i]<arr[j])
+        if(L[i]<=M[j])
         {
-            temp[index] = arr[i];
-            i = i + 1;
+            arr[k]=L[i];
+            i++;
         }
         else
         {
-            temp[index]= arr[j];
-            j = j + 1;
-        }
-        index ++;
-    }
-    
-    if(i>mid)
-    {
-        while(j<=end)
-        {
-            temp[index]= arr[j];
-            index ++;
+            arr[k] = M[j];
             j++;
         }
-    }
-    else
-    {
-        while(i<=mid)
-        {
-            temp[index] = arr[i];
-            index++;
-            i++;
-        }
+        k++;
     }
 
-    int k=0;
-    while(k<index)
+    while(i<n1)
     {
-        arr[k] = temp[k];
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    while (j < n2)
+    {
+        arr[k] = M[j];
+        j++;
         k++;
     }
 }
 
-void merge_sort(int arr[], int beg, int end, int n)
+void merge_sort(int arr[], int beg, int end)
 {
     int mid;
     if(beg<end)
     {
-        mid = (beg+end)/2;
-        merge_sort(arr,beg,mid, n);
-        merge_sort(arr,mid +1, end, n);
-        merge(arr, beg, mid, end, n);
+        mid = (beg+(end-1))/2;
+        merge_sort(arr,beg,mid);
+        merge_sort(arr,mid +1, end);
+        merge(arr, beg, mid, end);
     }
 }
 
@@ -71,7 +68,7 @@ int main()
     for (i = 0; i < n; i++)
         cin >> a[i];
 
-    merge_sort(a, 0, n+1, n);
+    merge_sort(a, 0, n-1);
 
     cout << "Sorted array: " << endl;
     for (int i = 0; i < n; i++)
